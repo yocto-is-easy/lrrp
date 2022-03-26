@@ -47,3 +47,7 @@ target_link_libraries(${LRRP_TEST}
     nlohmann_json::nlohmann_json
     lrrp
 )
+
+# examples
+
+add_subdirectory(example)
