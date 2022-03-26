@@ -17,6 +17,7 @@ lrrp::response lrrp::client::send(request& req) {
 
         std::string response_str;
         asio::read_until(socket, asio::dynamic_buffer(response_str), end_msg);
+        socket.close();
         return response::from_string(response_str);
     } catch(const std::exception& e) {
         return lrrp::response_builder().set_status(lrrp::internal_error).build();

@@ -27,6 +27,8 @@ void lrrp::server::run() {
         response res = handlers[req.jsonify()["route"]]->handle(req);
 
         asio::write(socket, asio::buffer(res.stringify() + end_msg));
+
+        socket.close();
     }
 }
 
