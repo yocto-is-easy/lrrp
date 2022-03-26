@@ -20,18 +20,22 @@ void lrrp::server::run() {
         asio::ip::tcp::socket socket(context_);
         acceptor_->accept(socket);
 
-        std::string request_str;
-        asio::read_until(socket, asio::dynamic_buffer(request_str), end_msg);
-
-        request req = request::from_string(request_str);
-        response res = handlers[req.jsonify()["route"]]->handle(req);
-
-        asio::write(socket, asio::buffer(res.stringify() + end_msg));
-
-        socket.close();
+        proceed(std::move(socket));
     }
 }
 
 void lrrp::server::stop() {
     should_stop = true;
+}
+
+void lrrp::server::proceed(asio::ip::tcp::socket&& socket) {
+    std::string request_str;
+    asio::read_until(socket, asio::dynamic_buffer(request_str), end_msg);
+
+    request req = request::from_string(request_str);
+
+    response res = handlers[req.jsonify()["route"]]->handle(req);
+    asio::write(socket, asio::buffer(res.stringify() + end_msg));
+
+    socket.close();
 }

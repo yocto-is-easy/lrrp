@@ -33,5 +33,7 @@ namespace lrrp
 
         void run();
         void stop();
+
+        void proceed(asio::ip::tcp::socket&& sock);
     };
 }
