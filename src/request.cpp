@@ -5,6 +5,10 @@ lrrp::request::request() {
     body = json::object();
 }
 
+lrrp::request::request(const std::string& raw) {
+    body = json::parse(raw);
+}
+
 void lrrp::request::set_route(const std::string& route) {
     body["route"] = route;
 }
@@ -15,4 +19,8 @@ json lrrp::request::jsonify() {
 
 std::string lrrp::request::stringify() {
     return body.dump();
+}
+
+lrrp::request lrrp::request::from_string(const std::string& raw) {
+    return request(raw);
 }

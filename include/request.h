@@ -10,8 +10,13 @@ namespace lrrp
 {
     class request {
         json body;
-    public:
+
+        friend class request_builder;
+
         request();
+        request(const std::string& raw);
+
+    public:
         void set_route(const std::string& route);
 
         // here can be set any base type or json object
@@ -23,6 +28,8 @@ namespace lrrp
         json jsonify();
 
         std::string stringify();
+
+        static request from_string(const std::string& raw);
     };
 
     class request_builder {
