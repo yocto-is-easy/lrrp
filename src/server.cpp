@@ -20,7 +20,8 @@ void lrrp::server::run() {
         asio::ip::tcp::socket socket(context_);
         acceptor_->accept(socket);
 
-        proceed(std::move(socket));
+        std::thread t(&lrrp::server::proceed, this, std::move(socket));
+        t.detach();
     }
 }
 
