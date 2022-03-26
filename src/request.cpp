@@ -13,11 +13,11 @@ void lrrp::request::set_route(const std::string& route) {
     body["route"] = route;
 }
 
-json lrrp::request::jsonify() {
+json lrrp::request::jsonify() const{
     return body;
 }
 
-std::string lrrp::request::stringify() {
+std::string lrrp::request::stringify() const {
     return body.dump();
 }
 

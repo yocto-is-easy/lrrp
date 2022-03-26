@@ -16,14 +16,18 @@ void lrrp::response::set_status(status_type status) {
     body["status"] = status;
 }
 
-json lrrp::response::jsonify() {
+json lrrp::response::jsonify() const {
     return body;
 }
 
-std::string lrrp::response::stringify() {
+std::string lrrp::response::stringify() const {
     return body.dump();
 }
 
 lrrp::response lrrp::response::from_string(const std::string& raw) {
     return response(raw);
+}
+
+json lrrp::response::get_payload() {
+    return body["payload"];
 }

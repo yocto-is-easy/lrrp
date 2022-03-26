@@ -16,7 +16,6 @@ namespace lrrp
         request();
         request(const std::string& raw);
 
-    public:
         void set_route(const std::string& route);
 
         // here can be set any base type or json object
@@ -25,9 +24,15 @@ namespace lrrp
             body["params"][key] = value;
         }
 
-        json jsonify();
+    public:
+        json jsonify() const;
 
-        std::string stringify();
+        std::string stringify() const;
+
+        template <typename T>
+        T get_param(const std::string& key) const {
+            return body["params"][key].get<T>();
+        }
 
         static request from_string(const std::string& raw);
     };

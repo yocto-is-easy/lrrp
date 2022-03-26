@@ -23,12 +23,13 @@ namespace lrrp
         response();
         response(const std::string& raw);
 
-    public:
         void set_payload(const json& payload);
         void set_status(status_type status);
+    public:
+        json jsonify() const;
+        std::string stringify() const;
 
-        json jsonify();
-        std::string stringify();
+        json get_payload();
 
         static response from_string(const std::string& raw);
     };

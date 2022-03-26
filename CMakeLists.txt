@@ -3,8 +3,11 @@ project(lrrp)
 cmake_minimum_required(VERSION 3.8)
 
 add_subdirectory(lib/googletest)
-find_package(Boost 1.78 REQUIRED system regex)
+find_package(Boost 1.78 REQUIRED system regex thread)
 add_subdirectory(lib/json)
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
 
 set(GTEST_DIR lib/googletest)
 set(JSON_DIR lib/json)
@@ -21,6 +24,12 @@ add_library(lrrp
     src/request.cpp
     src/response_builder.cpp
     src/response.cpp
+    src/client.cpp
+    src/server.cpp
+)
+
+target_link_libraries(lrrp
+    Threads::Threads
 )
 
 set(LRRP_TEST ${CMAKE_PROJECT_NAME}-test)
