@@ -19,6 +19,8 @@ include_directories(
 add_library(lrrp
     src/request_builder.cpp
     src/request.cpp
+    src/response_builder.cpp
+    src/response.cpp
 )
 
 set(LRRP_TEST ${CMAKE_PROJECT_NAME}-test)
@@ -27,6 +29,7 @@ add_executable(${LRRP_TEST}
     test/test_integration_asio.cpp
     test/test_integration_json.cpp
     test/test_request.cpp
+    test/test_response.cpp
 )
 
 target_link_libraries(${LRRP_TEST}
