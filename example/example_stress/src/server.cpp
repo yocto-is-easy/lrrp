@@ -15,5 +15,5 @@ int main() {
     lrrp::server s(8080);
     s.add_handler("echo", std::make_unique<echo_handler>());
 
-    s.run();
+    s.run_async();
 }
