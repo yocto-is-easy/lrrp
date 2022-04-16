@@ -8,7 +8,6 @@
 #include <atomic>
 #include <condition_variable>
 
-
 namespace lrrp
 {
     template <typename T>
@@ -43,6 +42,10 @@ namespace lrrp
             should_stop = false;
             for (int i = 0; i < num_threads; i++) {
                 threads.push_back(std::thread(&thread_pool::run_thread, this));
+            }
+
+            for(auto& thread : threads) {
+                thread.detach();
             }
         }
 
