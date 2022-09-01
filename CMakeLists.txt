@@ -12,7 +12,7 @@ if(${MAIN_PROJECT})
     add_subdirectory(lib/json)
 endif()
 
-find_package(Boost 1.78 REQUIRED system regex thread)
+find_package(Boost 1.72 REQUIRED system regex thread)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
