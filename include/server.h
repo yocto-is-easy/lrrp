@@ -23,7 +23,8 @@ namespace lrrp
     const std::string end_msg = "\r\n\r\n";
 
     class server {
-        std::map<std::string, std::unique_ptr<handler_base>> handlers;
+        std::map<std::string, std::function<lrrp::response(const lrrp::request&)>> handlers;
+
         asio::io_context context_;
         std::unique_ptr<asio::ip::tcp::acceptor> acceptor_;
         bool should_stop = false;
@@ -36,7 +37,7 @@ namespace lrrp
     public:
         server(int port, int num_of_workers = std::thread::hardware_concurrency(), ip_version ip_version = ipv4);
 
-        void add_handler(const std::string& route, std::unique_ptr<handler_base> handler);
+        int add_handler(const std::string& route, std::function<lrrp::response(const lrrp::request&)> handler);
         void set_ip_version(ip_version ip_version);
 
         void run();
@@ -64,8 +65,9 @@ void lrrp::server::set_ip_version(ip_version ip_version) {
     acceptor_ = std::make_unique<asio::ip::tcp::acceptor>(context_, endpoint);
 }
 
-void lrrp::server::add_handler(const std::string& route, std::unique_ptr<lrrp::handler_base> handler) {
-    handlers[route] = std::move(handler);
+int lrrp::server::add_handler(const std::string& route, std::function<lrrp::response(const lrrp::request&)> handler) {
+    handlers[route] = handler;
+    return handlers.size() - 1;
 }
 
 void lrrp::server::run_async() {
@@ -101,7 +103,7 @@ void lrrp::server::proceed(asio::ip::tcp::socket&& socket) {
 
     request req = request::from_string(request_str);
 
-    response res = handlers[req.jsonify()["route"]]->handle(req);
+    response res = handlers[req.jsonify()["route"]](req);
     asio::write(socket, asio::buffer(res.stringify() + end_msg));
 
     socket.close();

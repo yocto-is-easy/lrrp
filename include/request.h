@@ -34,6 +34,10 @@ namespace lrrp
             return body["params"][key].get<T>();
         }
 
+        json params() const {
+            return body["params"];
+        }
+
         static request from_string(const std::string& raw);
     };
 
@@ -45,6 +49,11 @@ namespace lrrp
         template <typename T>
         request_builder& set_param(const std::string& key, T value) {
             req_.set_param(key, value);
+            return *this;
+        }
+
+        request_builder& set_json(json j) {
+            req_.body["params"] = j;
             return *this;
         }
 
