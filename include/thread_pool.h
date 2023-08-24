@@ -49,6 +49,10 @@ namespace lrrp
             }
         }
 
+        ~thread_pool() {
+            stop();
+        }
+
         void set_worker(std::function<void(T&&)> worker) {
             this->worker = worker;
         }
