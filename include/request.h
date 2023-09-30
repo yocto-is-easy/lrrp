@@ -4,6 +4,8 @@
 
 #include <nlohmann/json.hpp>
 
+#include "base64.h"
+
 using namespace nlohmann;
 
 namespace lrrp
@@ -77,11 +79,11 @@ json lrrp::request::jsonify() const{
 }
 
 std::string lrrp::request::stringify() const {
-    return body.dump();
+    return base64::encode(body.dump());
 }
 
 lrrp::request lrrp::request::from_string(const std::string& raw) {
-    return request(raw);
+    return request(base64::decode(raw));
 }
 
 lrrp::request_builder::request_builder(const std::string& route) : req_() {

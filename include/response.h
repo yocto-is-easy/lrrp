@@ -3,6 +3,8 @@
 
 #include <nlohmann/json.hpp>
 
+#include "base64.h"
+
 using namespace nlohmann;
 
 namespace lrrp
@@ -85,11 +87,11 @@ json lrrp::response::jsonify() const {
 }
 
 std::string lrrp::response::stringify() const {
-    return body.dump();
+    return base64::encode(body.dump());
 }
 
 lrrp::response lrrp::response::from_string(const std::string& raw) {
-    return response(raw);
+    return response(base64::decode(raw));
 }
 
 json lrrp::response::get_payload() {
