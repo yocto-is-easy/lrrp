@@ -2,10 +2,11 @@
 
 #include <string>
 
-#include <boost/archive/iterators/binary_from_base64.hpp>
-#include <boost/archive/iterators/transform_width.hpp>
-#include <boost/archive/iterators/base64_from_binary.hpp>
-#include <boost/algorithm/string.hpp>
+#include <boost/beast.hpp>
+#include <boost/beast/http.hpp>
+#include <boost/beast/websocket.hpp>
+#include <boost/beast/core/buffers_to_string.hpp>
+#include <boost/beast/core/detail/base64.hpp>
 
 namespace lrrp
 {
@@ -16,19 +17,18 @@ public:
     static std::string decode(const std::string& data);
 };
 
-std::string base64::encode(const std::string& data) {
-    using namespace boost::archive::iterators;
-    using It = transform_width<binary_from_base64<std::string::const_iterator>, 8, 6>;
-    return boost::algorithm::trim_right_copy_if(std::string(It(std::begin(data)), It(std::end(data))), [](char c) {
-        return c == '\0';
-    });
+std::string base64::encode(const std::string& input) {
+    std::string out(boost::beast::detail::base64::encoded_size(input.size()), '\0');
+    int len = boost::beast::detail::base64::encode((void*)out.data(), (const char*)input.data(), input.size());
+    out.resize(len);
+    return out;
 }
 
-std::string base64::decode(const std::string& data) {
-    using namespace boost::archive::iterators;
-    using It = base64_from_binary<transform_width<std::string::const_iterator, 6, 8>>;
-    auto tmp = std::string(It(std::begin(data)), It(std::end(data)));
-    return tmp.append((3 - data.size() % 3) % 3, '=');
+std::string base64::decode(const std::string& input) {
+    std::string out(boost::beast::detail::base64::decoded_size(input.size()), '\0');
+    auto len = boost::beast::detail::base64::decode((void*)out.data(), (const char*)input.data(), input.size());
+    out.resize(len.first);
+    return out;
 }
 
 } // namespace lrrp
